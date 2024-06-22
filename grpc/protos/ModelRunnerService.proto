@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+service ModelRunnerService {
+  rpc UpdateRunninState (StateRequest) returns (StateResponse);
+}
+
+message StateRequest {
+  string run_id = 1;
+  string state = 2;
+  string container_id = 3;
+  int32 container_exit_code = 4;
+  string logs = 5;
+}
+
+message StateResponse {
+  bool resolved = 1;
+  string err = 2;
+}

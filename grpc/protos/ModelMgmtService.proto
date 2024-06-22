@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service ModelMgmtService {
+  rpc GetModel (ModelRequest) returns (ModelResponse);
+}
+
+message ModelRequest {
+  string model_id = 1;
+}
+
+message ModelResponse {
+  bool found = 1;
+  string json_data = 2;
+}
