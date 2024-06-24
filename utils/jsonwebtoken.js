@@ -1,5 +1,13 @@
 const jwt = require('jsonwebtoken')
 
+function getTokenFromBearer(bearerToken) {
+    const PREFIX = 'Bearer '
+    if (bearerToken && bearerToken.startsWith('Bearer ')) {
+        return bearerToken.replace(PREFIX, '')
+    }
+    return ''
+}
+
 async function generateSessionToken(string) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -23,6 +31,7 @@ async function decodeSessionToken(token) {
 }
 
 module.exports = {
-    generateSessionToken: generateSessionToken,
-    decodeSessionToken: decodeSessionToken
+    getTokenFromBearer,
+    generateSessionToken,
+    decodeSessionToken
 }

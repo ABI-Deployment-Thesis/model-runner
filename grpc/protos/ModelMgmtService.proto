@@ -2,6 +2,7 @@ syntax = "proto3";
 
 service ModelMgmtService {
   rpc GetModel (ModelRequest) returns (ModelResponse);
+  rpc GetModels (Empty) returns (ModelsResponse);
 }
 
 message ModelRequest {
@@ -12,3 +13,15 @@ message ModelResponse {
   bool found = 1;
   string json_data = 2;
 }
+
+message ModelsResponse {
+  repeated ModelSummary models = 1;
+}
+
+message ModelSummary {
+  string _id = 1;
+  string name = 2;
+  bool deleted = 3;
+}
+
+message Empty {}
