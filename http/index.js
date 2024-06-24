@@ -9,10 +9,11 @@ const app = express()
 
 // Start the server
 app.listen(port, function (err) {
-    if (!err)
+    if (!err) {
         logger.info(`HTTP server hosted on port ${port}`)
-    else
+    } else {
         logger.error(err)
+    }
 })
 
 // Export the app
