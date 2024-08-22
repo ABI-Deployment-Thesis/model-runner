@@ -1,6 +1,8 @@
 const path = require('path')
+const fs = require('fs')
 
 const mongoose = require('mongoose')
+const unzipper = require('unzipper')
 
 const ModelRun = require('../../models/modelRun')
 const { getModelSync, getModelsSync } = require('../../grpc/clients/modelMgmt')
@@ -45,8 +47,8 @@ async function getRunsById(req, res) {
 async function runModel(req, res, next) {
     try {
         const id = new mongoose.Types.ObjectId()
-        const model_id = req.body.model_id
-        const input_features = req.body.input_features
+        const model_id = req.params.model_id
+        const input_features = req.body.input_features || []
 
         const model = await getModelSync({ model_id: model_id }, req.headers.authorization)
         await validateInput(model, input_features)
@@ -58,12 +60,33 @@ async function runModel(req, res, next) {
         })
         await newModelRun.validate()
 
-        const message = {
-            run_id: id,
-            folder_path: path.dirname(model.file_path),
-            model_filename: path.basename(model.file_path),
-            input_features: JSON.stringify(input_features),
+        let message
+        switch (model.type) {
+            case 'predictive':
+                message = {
+                    run_id: id,
+                    type: model.type,
+                    folder_path: path.dirname(model.file_path),
+                    model_filename: path.basename(model.file_path),
+                    input_features: JSON.stringify(input_features)
+                }
+                break
+            case 'optimization':
+                const zipPath = req.file.path
+                const destPath = path.join(path.dirname(zipPath), id.toString())
+                await unzip(zipPath, destPath)
+                await fs.rmSync(zipPath, { recursive: true, force: true })
+                await fs.cpSync(model.file_path, destPath, {recursive: true})
+                message = {
+                    run_id: id,
+                    type: model.type,
+                    folder_path: destPath
+                }
+                break
+            default:
+                throw new Error('Invalid model type')
         }
+
         await rabbitmqSender(process.env.RABBITMQ_DOCKER_ENGINE_QUEUE, message)
 
         await newModelRun.save()
@@ -72,6 +95,11 @@ async function runModel(req, res, next) {
         logger.error(err)
         return res.status(400).json({ error: err.message })
     }
+}
+
+async function unzip(zipPath, destPath) {
+    const directory = await unzipper.Open.file(zipPath);
+    await directory.extract({ path: destPath })
 }
 
 function validateRunsAgainstModels(runs, models) {
