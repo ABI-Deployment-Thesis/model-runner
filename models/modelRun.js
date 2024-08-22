@@ -22,7 +22,8 @@ const ModelRun = new Schema({
     },
     input_features: {
         type: [InputFeaturesSchema],
-        required: true
+        required: true,
+        default: []
     },
     state: {
         type: String,
