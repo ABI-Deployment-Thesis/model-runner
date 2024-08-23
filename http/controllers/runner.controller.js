@@ -50,7 +50,21 @@ async function runModel(req, res, next) {
         const model_id = req.params.model_id
         const input_features = req.body.input_features || []
 
-        const model = await getModelSync({ model_id: model_id }, req.headers.authorization)
+        const GRPC_STABLE = process.env.GRPC_STABLE || 'true'
+        let model
+        if (GRPC_STABLE == 'true') {
+            model = await getModelSync({ model_id: model_id }, req.headers.authorization)
+        } else {
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", req.headers.authorization);
+            const requestOptions = {
+                method: "GET",
+                headers: myHeaders,
+                redirect: "follow"
+            };
+            const res = await fetch(`http://${process.env.HTTP_MODEL_MGMT_HOST}/models/${model_id}`, requestOptions)
+            model = await res.json()
+        }
         await validateInput(model, input_features)
 
         const newModelRun = await new ModelRun({
@@ -76,7 +90,7 @@ async function runModel(req, res, next) {
                 const destPath = path.join(path.dirname(zipPath), id.toString())
                 await unzip(zipPath, destPath)
                 await fs.rmSync(zipPath, { recursive: true, force: true })
-                await fs.cpSync(model.file_path, destPath, {recursive: true})
+                await fs.cpSync(model.file_path, destPath, { recursive: true })
                 message = {
                     run_id: id,
                     type: model.type,
