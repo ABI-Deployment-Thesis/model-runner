@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "set \"NODE_ENV=development\" && nodemon index"
+    "start": "set \"NODE_ENV=development\" && nodemon index",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "author": "",
   "license": "ISC",

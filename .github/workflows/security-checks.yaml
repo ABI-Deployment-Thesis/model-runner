@@ -1,0 +1,34 @@
+name: Security checks
+
+on:
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  trivy_file_system:
+    name: Trivy file system scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 #v4.1.7
+
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@6e7b7d1fd3e4fef0c5fa8cce1229c54b2c9bd0d8 #v0.24.0
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'table'
+          output: './results.txt'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          exit-code: '1'
+
+      - name: Inspect action report
+        if: always()
+        run: cat ./results.txt
+
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a #v4.3.6
+        with:
+          name: trivy-fs-scan-results
+          path: ./results.txt
