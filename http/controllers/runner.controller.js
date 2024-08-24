@@ -56,11 +56,11 @@ async function runModel(req, res, next) {
             model = await getModelSync({ model_id: model_id }, req.headers.authorization)
         } else {
             const myHeaders = new Headers();
-            myHeaders.append("Authorization", req.headers.authorization);
+            myHeaders.append('Authorization', req.headers.authorization);
             const requestOptions = {
-                method: "GET",
+                method: 'GET',
                 headers: myHeaders,
-                redirect: "follow"
+                redirect: 'follow'
             };
             const res = await fetch(`http://${process.env.HTTP_MODEL_MGMT_HOST}/models/${model_id}`, requestOptions)
             model = await res.json()
