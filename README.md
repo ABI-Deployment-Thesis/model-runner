@@ -32,6 +32,7 @@ For a detailed explanation of the proposed architecture and its deployment strat
 - Egress
     - Communicates with the model-management microservice to retrieve data about intelligent models via gRPC or HTTP, depending on the GRPC_STABLE flag.
     - Saves user-uploaded files related to intelligent models to storage.
+    - Sends data to run the intelligent models to a RabbitMQ queue.
 - Both
     - Communicates with MongoDB to save and retrieve data.
 
