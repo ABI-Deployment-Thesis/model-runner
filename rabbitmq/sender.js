@@ -11,7 +11,7 @@ module.exports = async function (queue, message) {
         msgToString = JSON.stringify(message)
         channel.sendToQueue(queue, Buffer.from(msgToString))
         logger.debug(`RabbitMQ message sent: ${msgToString}`)
-        
+
         await channel.close()
     } catch (err) {
         throw err
