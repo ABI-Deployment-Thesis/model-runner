@@ -12,7 +12,7 @@
     <a href="https://github.com/ABI-Deployment-Thesis/model-runner/blob/main/LICENSE"><img alt="GitHub License" src="https://img.shields.io/github/license/ABI-Deployment-Thesis/model-runner"></a>
 </div>
 
-<h2 align="center">ABI Deployment Thesis - Model Management</h2>
+<h2 align="center">ABI Deployment Thesis - Model Runner</h2>
 
 Welcome to the model-runner repository! This project is a key part of a master's thesis at the University of Minho. It's a Proof of Concept for a proposed architecture designed to deploy and integrate intelligent models within ABI (Adaptive Business Intelligence) systems.
 
