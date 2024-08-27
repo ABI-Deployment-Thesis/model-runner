@@ -14,7 +14,7 @@
 
 <h2 align="center">ABI Deployment Thesis - Model Runner</h2>
 
-Welcome to the model-runner repository! This project is a key part of a master's thesis at the University of Minho. It's a Proof of Concept for a proposed architecture designed to deploy and integrate intelligent models within ABI (Adaptive Business Intelligence) systems.
+Welcome to the model-runner repository! This project is a key part of a master's thesis at the University of Minho. It's a Proof of Concept for a proposed architecture designed to deploy and integrate intelligent models within Adaptive Business Intelligence (ABI) systems.
 
 **This repository provides a microservice for managing intelligent model runs. It stores user inputs, routes data to engine microservices for model execution, and includes an API for monitoring run statuses through gRPC updates from the engines.**
 
