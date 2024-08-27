@@ -21,7 +21,9 @@ message ModelsResponse {
 message ModelSummary {
   string _id = 1;
   string name = 2;
-  bool deleted = 3;
+  string type = 3;
+  string engine = 4;
+  bool deleted = 5;
 }
 
 message Empty {}

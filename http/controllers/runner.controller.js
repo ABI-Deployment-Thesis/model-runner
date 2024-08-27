@@ -82,7 +82,9 @@ async function runModel(req, res, next) {
                     type: model.type,
                     folder_path: path.dirname(model.file_path),
                     model_filename: path.basename(model.file_path),
-                    input_features: JSON.stringify(input_features)
+                    input_features: JSON.stringify(input_features),
+                    mem_limit: model.mem_limit,
+                    cpu_percentage: model.cpu_percentage
                 }
                 break
             case 'optimization':
@@ -94,26 +96,23 @@ async function runModel(req, res, next) {
                 message = {
                     run_id: id,
                     type: model.type,
-                    folder_path: destPath
+                    folder_path: destPath,
+                    mem_limit: model.mem_limit,
+                    cpu_percentage: model.cpu_percentage
                 }
                 break
             default:
                 throw new Error('Invalid model type')
         }
 
+        await newModelRun.save()
         await rabbitmqSender(process.env.RABBITMQ_DOCKER_ENGINE_QUEUE, message)
 
-        await newModelRun.save()
         res.status(201).json({ message: `Request to run model sent successfully with ID ${id}` })
     } catch (err) {
         logger.error(err)
         return res.status(400).json({ error: err.message })
     }
-}
-
-async function unzip(zipPath, destPath) {
-    const directory = await unzipper.Open.file(zipPath);
-    await directory.extract({ path: destPath })
 }
 
 function validateRunsAgainstModels(runs, models) {
@@ -123,11 +122,18 @@ function validateRunsAgainstModels(runs, models) {
         const model = models.find(model => model._id.toString() === run.model_id.toString())
         if (model && !model.deleted) {
             run._doc.model_name = model.name
+            run._doc.model_type = model.type
+            run._doc.model_engine = model.engine
             validatedRuns.push(run)
         }
     })
 
     return validatedRuns
+}
+
+async function unzip(zipPath, destPath) {
+    const directory = await unzipper.Open.file(zipPath);
+    await directory.extract({ path: destPath })
 }
 
 function validateInput(model, input_features) {
