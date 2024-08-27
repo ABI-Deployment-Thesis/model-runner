@@ -42,4 +42,4 @@ For a detailed explanation of the proposed architecture and its deployment strat
 
 ## License
 
-- [MIT](https://choosealicense.com/licenses/mit/)
+- [CC BY-SA](https://creativecommons.org/licenses/by-sa/4.0/)
