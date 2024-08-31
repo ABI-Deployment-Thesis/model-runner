@@ -6,7 +6,7 @@ async function UpdateRunninState(call, callback) {
     try {
         logger.debug(`Received gRPC call: ${JSON.stringify(call.request)}`)
 
-        const { run_id, state, container_id, container_exit_code, logs } = call.request
+        const { run_id, state, result, logs } = call.request
 
         if (!mongoose.Types.ObjectId.isValid(run_id)) {
             logger.error(`model_id ${run_id} not valid`)
@@ -14,7 +14,7 @@ async function UpdateRunninState(call, callback) {
         }
 
         const filter = { _id: run_id }
-        const update = { state: state, container_id: container_id, container_exit_code: container_exit_code, result: logs }
+        const update = { state: state, result: result, logs: logs }
 
         await ModelRun.findOneAndUpdate(filter, update)
         callback(null, { resolved: true, err: '' })
