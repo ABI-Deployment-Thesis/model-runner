@@ -31,18 +31,22 @@ const ModelRun = new Schema({
         required: true,
         default: 'queue'
     },
-    container_id: {
-        type: String,
-        required: false
-    },
-    container_exit_code: {
-        type: Number,
-        required: false
-    },
     result: {
         type: String,
-        required: false
+        required: false,
+        default: ''
+    },
+    logs: {
+        type: String,
+        required: false,
+        default: ''
     }
-}, { timestamps: true, versionKey: false })
+}, {
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at'
+    },
+    versionKey: false
+})
 
 module.exports = model('model_run', ModelRun)

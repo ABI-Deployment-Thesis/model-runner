@@ -7,9 +7,8 @@ service ModelRunnerService {
 message StateRequest {
   string run_id = 1;
   string state = 2;
-  string container_id = 3;
-  int32 container_exit_code = 4;
-  string logs = 5;
+  string result = 3;
+  string logs = 4;
 }
 
 message StateResponse {
