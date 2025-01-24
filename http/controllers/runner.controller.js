@@ -16,7 +16,7 @@ async function getRuns(req, res) {
         if (req.query.model_id) {
             runs = await ModelRun.find({ model_id: req.query.model_id })
         } else {
-            runs = await ModelRun.find();
+            runs = await ModelRun.find()
         }
 
         const validatedRuns = validateRunsAgainstModels(runs, models)
@@ -55,13 +55,13 @@ async function runModel(req, res, next) {
         if (GRPC_STABLE == 'true') {
             model = await getModelSync({ model_id: model_id }, req.headers.authorization)
         } else {
-            const myHeaders = new Headers();
-            myHeaders.append('Authorization', req.headers.authorization);
+            const myHeaders = new Headers()
+            myHeaders.append('Authorization', req.headers.authorization)
             const requestOptions = {
                 method: 'GET',
                 headers: myHeaders,
                 redirect: 'follow'
-            };
+            }
             const res = await fetch(`http://${process.env.HTTP_MODEL_MGMT_HOST}/models/${model_id}`, requestOptions)
             model = await res.json()
         }
@@ -132,7 +132,7 @@ function validateRunsAgainstModels(runs, models) {
 }
 
 async function unzip(zipPath, destPath) {
-    const directory = await unzipper.Open.file(zipPath);
+    const directory = await unzipper.Open.file(zipPath)
     await directory.extract({ path: destPath })
 }
 

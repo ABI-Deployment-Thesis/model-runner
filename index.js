@@ -15,3 +15,5 @@ mongoDB.con()
 require('./http')
 
 require('./grpc')
+
+require('./rabbitmq')
