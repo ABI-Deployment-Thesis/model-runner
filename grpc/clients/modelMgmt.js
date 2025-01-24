@@ -16,6 +16,7 @@ const ModelMgmtService = protoDescriptor.ModelMgmtService
 const client = new ModelMgmtService(process.env.GRPC_MODEL_MGMT_HOST, grpc.credentials.createInsecure())
 const getModelPromisified = promisify(client.GetModel).bind(client)
 const getModelsPromisified = promisify(client.GetModels).bind(client)
+const getModelByNamePromisified = promisify(client.GetModelByName).bind(client)
 
 async function getModelSync(message, token) {
     try {
@@ -37,13 +38,24 @@ async function getModelsSync(token) {
     }
 }
 
+async function getModelByNameSync(message, token) {
+    try {
+        res = await getModelByNamePromisified(message, createMetadata(token))
+        if (!res.found) throw new Error('Model Not Found')
+        return JSON.parse(res.json_data)
+    } catch (err) {
+        throw err
+    }
+}
+
 function createMetadata(token) {
-    const metadata = new grpc.Metadata();
-    metadata.add('authorization', token);
+    const metadata = new grpc.Metadata()
+    metadata.add('authorization', token)
     return metadata
 }
 
 module.exports = {
     getModelSync,
-    getModelsSync
+    getModelsSync,
+    getModelByNameSync
 }

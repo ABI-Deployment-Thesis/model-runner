@@ -1,12 +1,20 @@
 syntax = "proto3";
 
 service ModelMgmtService {
+  // Requires Authorization Token in Metadata
   rpc GetModel (ModelRequest) returns (ModelResponse);
   rpc GetModels (Empty) returns (ModelsResponse);
+  rpc GetModelByName (ModelByNameRequest) returns (ModelResponse);
 }
 
 message ModelRequest {
   string model_id = 1;
+}
+
+message Empty {}
+
+message ModelByNameRequest {
+  string name = 2;
 }
 
 message ModelResponse {
@@ -25,5 +33,3 @@ message ModelSummary {
   string engine = 4;
   bool deleted = 5;
 }
-
-message Empty {}

@@ -31,6 +31,11 @@ const ModelRun = new Schema({
         required: true,
         default: 'queue'
     },
+    rabbitmq_transaction_id: {
+        type: String,
+        required: false,
+        default: ''
+    },
     result: {
         type: String,
         required: false,
